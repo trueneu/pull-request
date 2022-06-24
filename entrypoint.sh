@@ -17,13 +17,15 @@ else
   exit 1
 fi
 
+REPO="${INPUT_REPOSITORY:-"$GITHUB_REPOSITORY"}"
+
 DESTINATION_BRANCH="${INPUT_DESTINATION_BRANCH:-"master"}"
 
 # Fix for the unsafe repo error: https://github.com/repo-sync/pull-request/issues/84
 git config --global --add safe.directory /github/workspace
 
 # Github actions no longer auto set the username and GITHUB_TOKEN
-git remote set-url origin "https://$GITHUB_ACTOR:$GITHUB_TOKEN@${GITHUB_SERVER_URL#https://}/$GITHUB_REPOSITORY"
+git remote set-url origin "https://$GITHUB_ACTOR:$GITHUB_TOKEN@${GITHUB_SERVER_URL#https://}/$REPO"
 
 # Pull all branches references down locally so subsequent commands can see them
 git fetch origin '+refs/heads/*:refs/heads/*' --update-head-ok
